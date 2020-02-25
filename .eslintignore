@@ -1,0 +1,5 @@
+# service worker file
+/src/serviceWorker.ts
+
+# configs files
+*.config.js
