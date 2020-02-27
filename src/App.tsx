@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import Canvas from './ThreeExample';
+// import Canvas from './ThreeExample';
+import Canvas from './FiguresExample';
 
 const App: FunctionComponent<{}> = () => {
   return (
