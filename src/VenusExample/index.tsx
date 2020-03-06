@@ -5,6 +5,11 @@ import { TControls, TVoidCallback, TFigure, TPosition, TDependencies } from './t
 import { randomInRange } from '../utils';
 
 class Venus {
+  readonly RINGS = [
+    { size: 1, color: 0x8dffab },
+    { size: 1.5, color: 0x8dffab },
+    { size: 2.2, color: 0x8dffab },
+  ];
   readonly MIN_SPEED = 0.005;
   readonly MAX_SPEED = 0.01;
   readonly MIN_Y = -2;
@@ -19,7 +24,7 @@ class Venus {
   constructor({ scene, initialPosition }: TDependencies) {
     this.scene = scene;
     this.planet = this.createPlanet(initialPosition);
-    this.rings = [1, 1.5, 2.2].map((size: number) => this.createRing(size, initialPosition));
+    this.rings = this.RINGS.map(({ size, color }) => this.createRing(size, color, initialPosition));
     this.speed = randomInRange(this.MIN_SPEED, this.MAX_SPEED);
     this.direction = 'down';
   }
@@ -41,9 +46,9 @@ class Venus {
     return { geometry, material, mesh };
   }
 
-  private createRing(size: number, position: TPosition): TFigure<THREE.TorusGeometry> {
+  private createRing(size: number, color: number, position: TPosition): TFigure<THREE.TorusGeometry> {
     const geometry = new THREE.TorusGeometry(0.7 * size, 0.1 * size, 2, 30, Math.PI * 2);
-    const material = new THREE.MeshBasicMaterial({ color: 0xbb34ba, wireframe: true });
+    const material = new THREE.MeshBasicMaterial({ color, wireframe: true });
     const mesh = new THREE.Mesh(geometry, material);
 
     mesh.position.x = position.x;
@@ -112,11 +117,13 @@ const Canvas: FunctionComponent<{}> = () => {
     const stats = new Stats();
     stats.showPanel(0);
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
     camera.position.z = 5;
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setClearColor('#000000');
     renderer.setSize(width, height);
+    const axes = new THREE.AxesHelper(3);
+    scene.add(axes);
 
     const venus = new Venus({ scene, initialPosition: { x: 0, y: 0, z: 0 } });
 
